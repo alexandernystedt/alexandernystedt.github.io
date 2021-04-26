@@ -1,0 +1,20 @@
+body
+{
+    margin: 0;
+    height: 100vh;
+}
+
+canvas
+{
+    display: block;
+}
+
+.gui
+{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 10px;
+    top: 10px;
+    background-color: green;
+}
