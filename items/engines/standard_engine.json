@@ -1,0 +1,9 @@
+{
+    "name": "Standard engine",
+    "desc": "A standard engine from a average car.",
+    "id": 0,
+    
+    "type": "engine",
+    "horsepower": 125,
+    "weight": 150
+}

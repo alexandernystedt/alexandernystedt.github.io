@@ -1,0 +1,9 @@
+{
+    "name": "test item",
+    "id": 0,
+    
+    "type": "engine",
+    "horsepower": 2,
+    
+    "weight": 50
+}

@@ -1,0 +1,9 @@
+{
+    "name": "Lawn mower engine",
+    "desc": "A small and weak engine from a lawn mower.",
+    "id": 0,
+    
+    "type": "engine",
+    "horsepower": 5,
+    "weight": 5
+}

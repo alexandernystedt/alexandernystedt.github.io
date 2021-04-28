@@ -1,0 +1,9 @@
+{
+    "name": "Basic engine",
+    "desc": "A very small and basic engine.",
+    "id": 0,
+    
+    "type": "engine",
+    "horsepower": 15,
+    "weight": 10
+}

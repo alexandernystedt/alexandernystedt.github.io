@@ -1,0 +1,9 @@
+{
+    "name": "Rocket engine",
+    "desc": "A big and heavy engine.",
+    "id": 0,
+    
+    "type": "engine",
+    "horsepower": 70000,
+    "weight": 10000
+}

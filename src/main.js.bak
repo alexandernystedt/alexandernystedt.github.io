@@ -50,13 +50,9 @@ class Car
         
         this.acceleration = 0;
         
-        this.vel_x = 0;
-        this.vel_y = 0;
-        
         this.weight = car_default_weight;
         
         this.padel = 0;
-        this.drift = 0;
         
         this.update_values();
     }    
@@ -109,17 +105,17 @@ class Car
         
         if(pressedKeys[65] /* a */)
         {
-            this.wheel_angle -= degrees_to_radians * 45 * delta * 2;
+            this.wheel_angle -= degrees_to_radians * 45 * delta * 1.5;
         }
         
         if(pressedKeys[68] /* d */)
         {
-            this.wheel_angle += degrees_to_radians * 45 * delta * 2;
+            this.wheel_angle += degrees_to_radians * 45 * delta * 1.5;
         }
         
         /* https://math.stackexchange.com/questions/180874/convert-angle-radians-to-a-heading-vector */
-        var dy = -Math.cos(this.car_angle + this.wheel_angle);
-        var dx = -Math.sin(this.car_angle + this.wheel_angle);
+        var dy = Math.cos(this.car_angle + this.wheel_angle);
+        var dx = Math.sin(this.car_angle + this.wheel_angle);
         
         if(pressedKeys[87] /* w */)
         {
@@ -127,6 +123,8 @@ class Car
             {
                 this.acceleration += delta * (1 - this.acceleration) * /*acceleration */ 1;
             }
+            
+            this.car_angle -= this.wheel_angle;
         }
         
         if(pressedKeys[83] /* s */)
@@ -139,6 +137,8 @@ class Car
             {
                 this.acceleration -= delta * (1 - Math.abs(this.acceleration));
             }
+            
+            this.car_angle += this.wheel_angle;
         }
         
         if(!pressedKeys[87] && !pressedKeys[83] /*&& !pressedKeys[32]*/)
@@ -155,60 +155,8 @@ class Car
             }
         }
         
-        if((this.vel_x * dx + this.vel_y * dy) > 0)
-        {
-            this.car_angle -= this.wheel_angle * Math.abs(this.acceleration);
-        }
-        else
-        {
-            this.car_angle += this.wheel_angle * Math.abs(this.acceleration);
-        }
-        
-        this.vel_x += dx * this.acceleration * this.speed * delta;
-        this.vel_y += dy * this.acceleration * this.speed * delta;
-        
-        let dot = (this.vel_x * dx + this.vel_y * dy);
-        let forward_x = dx * dot;
-        let forward_y = dy * dot;
-        
-        dy = -Math.cos(this.car_angle + this.wheel_angle + (Math.PI / 2));
-        dx = -Math.sin(this.car_angle + this.wheel_angle + (Math.PI / 2));
-        dot = (this.vel_x * dx + this.vel_y * dy);
-        let right_x = dx * dot;
-        let right_y = dy * dot;
-        
-        //console.log("x: " + forward_x + " y: " + forward_y);ws
-        
-        this.position.x += this.vel_x;
-        this.position.z += this.vel_y;
-        
-        if(pressedKeys[32] /* space */) 
-        {
-            if(this.drift < 60)
-            {
-                this.drift += 60 * delta; 
-            }
-        }
-        else
-        {
-            if(this.drift > 0)
-            {
-                this.drift -= 60 * delta; 
-            }
-            else
-            {
-                this.drift = 0;
-            }
-        }
-        
-        this.vel_x = forward_x + right_x * this.drift;
-        this.vel_y = forward_y + right_y * this.drift;
-        
-        let drag_x = this.vel_x * this.vel_x;
-        let drag_y = this.vel_y * this.vel_y;
-        
-        this.vel_x *= Math.min(drag_x * delta, delta * 1);
-        this.vel_y *= Math.min(drag_y * delta, delta * 1);
+        this.position.x -= dx * this.acceleration * (this.speed) * delta;
+        this.position.z -= dy * this.acceleration * (this.speed) * delta;
     }
     
 }
