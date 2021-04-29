@@ -94,8 +94,8 @@ class Car
                 break;
                 
             case Engine.standard:
-                this.horsepower = 250;
-                this.weight += 150;
+                this.horsepower = 70000;
+                this.weight += 100;
                 break;
         }
         
@@ -114,7 +114,7 @@ class Car
         
         if(pressedKeys[68] /* d */)
         {
-            this.wheel_angle += degrees_to_radians * 45 * delta * 4;
+            this.wheel_angle += degrees_to_radians * 45 * delta * 9;
         }
         
         /* https://math.stackexchange.com/questions/180874/convert-angle-radians-to-a-heading-vector */
