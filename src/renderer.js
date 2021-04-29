@@ -96,8 +96,8 @@ function render()
 
 function update_camera(x, y, z)
 {
-    camera.position.x = camera.position.x * .9 + (x) * .1;
-    camera.position.z = camera.position.z * .9 + (z + 20) * .1;
+    camera.position.x = x;//camera.position.x * .9 + (x) * .1;
+    camera.position.z = z + 20;//camera.position.z * .9 + (z + 20) * .1;
 }
 
 function update_car_mesh(x, y, z, rot)
