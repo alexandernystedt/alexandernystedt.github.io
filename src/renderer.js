@@ -45,13 +45,13 @@ function setup_renderer()
     const texture = new THREE.TextureLoader().load("res/tex.png");
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(999999, 999999);
+    texture.repeat.set(100, 100);
     
     const texture2 = new THREE.TextureLoader().load("res/colors.png");
     
     var plane = new THREE.Mesh
     (
-        new THREE.PlaneGeometry(9999999, 9999999, 10, 10),
+        new THREE.PlaneGeometry(1000, 1000, 10, 10),
         new THREE.MeshBasicMaterial
         ({
             //color: 0xFF0000,ss
