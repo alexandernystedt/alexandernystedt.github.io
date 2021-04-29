@@ -94,8 +94,8 @@ class Car
                 break;
                 
             case Engine.standard:
-                this.horsepower = 70000;
-                this.weight += 100;
+                this.horsepower = 125;
+                this.weight += 150;
                 break;
         }
         
@@ -109,33 +109,17 @@ class Car
         
         if(pressedKeys[65] /* a */)
         {
-<<<<<<< Updated upstream
-            this.wheel_angle -= degrees_to_radians * 45 * delta * 4;
-=======
-<<<<<<< HEAD
-            this.wheel_angle -= degrees_to_radians * 45 * delta * 3;
-=======
-            this.wheel_angle -= degrees_to_radians * 45 * delta * 4;
->>>>>>> 680dc9b9879e4b8e0aefb66cdfc75fcc5e6ee984
->>>>>>> Stashed changes
+            this.wheel_angle -= degrees_to_radians * 45 * delta * 2.5;
         }
         
         if(pressedKeys[68] /* d */)
         {
-<<<<<<< Updated upstream
-            this.wheel_angle += degrees_to_radians * 45 * delta * 9;
-=======
-<<<<<<< HEAD
-            this.wheel_angle += degrees_to_radians * 45 * delta * 3;
-=======
-            this.wheel_angle += degrees_to_radians * 45 * delta * 9;
->>>>>>> 680dc9b9879e4b8e0aefb66cdfc75fcc5e6ee984
->>>>>>> Stashed changes
+            this.wheel_angle += degrees_to_radians * 45 * delta * 2.5;
         }
         
         /* https://math.stackexchange.com/questions/180874/convert-angle-radians-to-a-heading-vector */
-        let dy = -Math.cos(this.car_angle + this.wheel_angle);
-        let dx = -Math.sin(this.car_angle + this.wheel_angle);
+        var dy = -Math.cos(this.car_angle + this.wheel_angle);
+        var dx = -Math.sin(this.car_angle + this.wheel_angle);
         
         if(pressedKeys[87] /* w */)
         {
@@ -143,8 +127,6 @@ class Car
             {
                 this.acceleration += delta * (1 - this.acceleration) * /*acceleration */ 1;
             }
-            
-            this.car_angle -= this.wheel_angle
         }
         
         if(pressedKeys[83] /* s */)
@@ -157,8 +139,6 @@ class Car
             {
                 this.acceleration -= delta * (1 - Math.abs(this.acceleration));
             }
-            
-            this.car_angle += this.wheel_angle
         }
         
         if(!pressedKeys[87] && !pressedKeys[83] /*&& !pressedKeys[32]*/)
@@ -175,34 +155,47 @@ class Car
             }
         }
         
-        this.vel_x += dx * this.acceleration * delta;// * this.speed;
-        this.vel_y += dy * this.acceleration * delta;// * this.speed;
-        
-        dy = -Math.cos(this.car_angle);
-        dx = -Math.sin(this.car_angle);
-        let forward_vel_x = dx * (dx * this.vel_x + dy * this.vel_y);
-        let forward_vel_y = dy * (dx * this.vel_x + dy * this.vel_y);
-        dy = -Math.cos(this.car_angle + (Math.PI * .5));
-        dx = -Math.sin(this.car_angle + (Math.PI * .5));
-        let right_vel_x = dx * (dx * this.vel_x + dy * this.vel_y);
-        let right_vel_y = dy * (dx * this.vel_x + dy * this.vel_y);
-        
-        if(pressedKeys[32])
+        if((this.vel_x * dx + this.vel_y * dy) > 0)
         {
-            if(this.drift < 1)
+            this.car_angle -= this.wheel_angle * Math.abs(this.acceleration);
+        }
+        else
+        {
+            this.car_angle += this.wheel_angle * Math.abs(this.acceleration);
+        }
+        
+        this.vel_x += dx * this.acceleration * this.speed * delta;
+        this.vel_y += dy * this.acceleration * this.speed * delta;
+        
+        let dot_f = (this.vel_x * dx + this.vel_y * dy);
+        let forward_x = dx * dot_f;
+        let forward_y = dy * dot_f;
+        
+        dy = -Math.cos(this.car_angle + this.wheel_angle + (Math.PI / 2));
+        dx = -Math.sin(this.car_angle + this.wheel_angle + (Math.PI / 2));
+        let dot_r = (this.vel_x * dx + this.vel_y * dy);
+        let right_x = dx * dot_r;
+        let right_y = dy * dot_r;
+        
+        //console.log("x: " + forward_x + " y: " + forward_y);ws
+        
+        this.position.x += this.vel_x;
+        this.position.z += this.vel_y;
+        
+        const drift_factor = 40;
+        
+        if(pressedKeys[32] /* space */) 
+        {
+            if(this.drift < drift_factor)
             {
-                this.drift += delta * 2;
-            }
-            else
-            {
-                this.drift = 1;
+                this.drift += drift_factor * delta; 
             }
         }
         else
         {
             if(this.drift > 0)
             {
-                this.drift -= delta * .5;
+                this.drift -= drift_factor * delta; 
             }
             else
             {
@@ -210,13 +203,16 @@ class Car
             }
         }
         
-        this.vel_x = forward_vel_x + right_vel_x * this.drift;
-        this.vel_y = forward_vel_y + right_vel_y * this.drift;
+        this.vel_x = forward_x + right_x * this.drift;
+        this.vel_y = forward_y + right_y * this.drift;
         
-        this.position.x += this.vel_x;
-        this.position.z += this.vel_y;
-        this.vel_x *= .99;
-        this.vel_y *= .99;
+        this.car_angle += this.drift * delta * -dot_r;
+        
+        let drag_x = this.vel_x * this.vel_x;
+        let drag_y = this.vel_y * this.vel_y;
+        
+        this.vel_x *= Math.min(drag_x * delta, delta * 1);
+        this.vel_y *= Math.min(drag_y * delta, delta * 1);
     }
     
 }
@@ -246,7 +242,7 @@ function game_update()
     
     update_car_mesh(car.position.x, car.position.y, car.position.z, car.car_angle);
     
-    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI);
+    update_camera(car.position.x, car.position.y, car.position.z);
     
     
     /* Drawing here */

@@ -94,10 +94,33 @@ function render()
     renderer.render(scene, camera);
 }
 
-function update_camera(x, y, z)
+function update_camera(x, y, z, rot)
 {
+<<<<<<< Updated upstream
     camera.position.x = x;//camera.position.x * .9 + (x) * .1;
     camera.position.z = z + 20;//camera.position.z * .9 + (z + 20) * .1;
+=======
+<<<<<<< HEAD
+    if(false)
+    {
+        let dx = -Math.sin(rot);
+        let dz = -Math.cos(rot);
+        
+        camera.position.x = camera.position.x * .9 + (x + dx * 30) * .1;//camera.position.x * .9 + (x) * .1;
+        camera.position.z = camera.position.z * .9 + (z + dz * 30) * .1;//camera.position.z * .9 + (z + 20) * .1;
+        
+        camera.lookAt(x, y, z);
+    }
+    else
+    {
+        camera.position.x = camera.position.x * .9 + (x) * .1;
+        camera.position.z = camera.position.z * .9 + (z + 20) * .1;
+    }
+=======
+    camera.position.x = x;//camera.position.x * .9 + (x) * .1;
+    camera.position.z = z + 20;//camera.position.z * .9 + (z + 20) * .1;
+>>>>>>> 680dc9b9879e4b8e0aefb66cdfc75fcc5e6ee984
+>>>>>>> Stashed changes
 }
 
 function update_car_mesh(x, y, z, rot)
