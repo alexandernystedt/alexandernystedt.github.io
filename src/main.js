@@ -11,6 +11,9 @@ setup_renderer();
 load_items();
 
 const degrees_to_radians = 0.0174532925;
+const acceleration = .5;
+const breaks = 10; 
+var speeometer = document.getElementById("speedometer");
 
 const Engine = 
 {
@@ -159,8 +162,8 @@ class Car
             }
         }
         
-        this.vel_x += dx * this.acceleration * delta;// * this.speed;
-        this.vel_y += dy * this.acceleration * delta;// * this.speed;
+        this.vel_x += dx * this.acceleration * delta * acceleration;// * this.speed;
+        this.vel_y += dy * this.acceleration * delta * acceleration;// * this.speed;
         
         dy = -Math.cos(this.car_angle);
         dx = -Math.sin(this.car_angle);
@@ -197,10 +200,13 @@ class Car
         this.vel_x = forward_vel_x + right_vel_x * this.drift;
         this.vel_y = forward_vel_y + right_vel_y * this.drift;
         
+        let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
+        speedomoter.innerHTML = vel_magnitude + " kmph";
+        
         this.position.x += this.vel_x;
         this.position.z += this.vel_y;
-        this.vel_x *= .99;
-        this.vel_y *= .99;
+        this.vel_x -= delta * breakspeed;
+        this.vel_y -= delta * breakspeed;
     }
     
 }
