@@ -94,9 +94,9 @@ function render()
     renderer.render(scene, camera);
 }
 
-function update_camera(x, y, z, rot)
+function update_camera(x, y, z, rot, camera_type)
 {
-    if(false)
+    if(camera_type)
     {
         let dx = -Math.sin(rot);
         let dz = -Math.cos(rot);
