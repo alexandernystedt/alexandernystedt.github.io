@@ -203,8 +203,8 @@ class Car
         let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
         speedometer.innerHTML = vel_magnitude * 3.6 + " kmph";
         
-        this.position.x += this.vel_x * delta;
-        this.position.z += this.vel_y * delta;
+        this.position.x += this.vel_x * this.drift;
+        this.position.z += this.vel_y * this.drift;
         this.vel_x *= .995;
         this.vel_y *= .995;
     }
@@ -236,7 +236,7 @@ function game_update()
     
     update_car_mesh(car.position.x, car.position.y, car.position.z, car.car_angle);
     
-    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI);
+    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI, true);
     
     
     /* Drawing here */
