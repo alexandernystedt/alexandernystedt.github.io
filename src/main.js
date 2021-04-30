@@ -238,7 +238,7 @@ function game_update()
     update_car_mesh(car.position.x, car.position.y, car.position.z, car.car_angle);
     
     if(pressedKeys[49]) camera_type = true;
-    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI, true);
+    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI, camera_type);
     
     
     /* Drawing here */
