@@ -12,9 +12,28 @@ load_items();
 
 const degrees_to_radians = 0.0174532925;
 const acceleration = .5;
-const breaks = 10; 
+const break_speed = 10; 
 var speedometer = document.getElementById("speedometer");
 let camera_type = false;
+
+var standard_drift_slider = document.getElementById("drifting_value");
+var standard_drift_slider_display = document.getElementById("drifting_value_display");
+var space_pressed_drift_slider = document.getElementById("space_drifting_value");
+var space_pressed_drift_slider_display = document.getElementById("space_drifting_value_display");
+let standard_drift = .6;
+let space_pressed_drift = 1;
+
+standard_drift_slider.oninput = (() => 
+{
+    standard_drift = standard_drift_slider.value / 100;
+    standard_drift_slider_display.innerHTML = standard_drift_slider.value + "%";
+});
+
+space_pressed_drift_slider.oninput = (() => 
+{
+    space_pressed_drift = space_pressed_drift_slider.value / 100;
+    space_pressed_drift_slider_display.innerHTML = space_pressed_drift_slider.value + "%";
+});
 
 const Engine = 
 {
@@ -68,7 +87,7 @@ class Car
     /* Meter/second, mps */
     get max_speed()
     {
-        update_values();
+        this.update_values();
         return this.speed;
     }
     
@@ -127,31 +146,34 @@ class Car
         
         if(pressedKeys[87] /* w */)
         {
-            if(this.acceleration < 1)
+            this.acceleration = 1;
+            /*if(this.acceleration < 1)
             {
-                this.acceleration += delta * (1 - this.acceleration) * /*acceleration */ 1;
-            }
+                this.acceleration += delta * (1 - this.acceleration) * 1;
+            }*/
             
-            this.car_angle -= this.wheel_angle
+            //this.car_angle -= this.wheel_angle
         }
         
         if(pressedKeys[83] /* s */)
         {
-            if(this.acceleration > 0)
+            this.acceleration = -1;
+            /*if(this.acceleration > 0)
             {
                 this.acceleration -= delta;
             }
             else if(this.acceleration > -1)
             {
                 this.acceleration -= delta * (1 - Math.abs(this.acceleration));
-            }
+            }*/
             
-            this.car_angle += this.wheel_angle
+            //this.car_angle += this.wheel_angle
         }
         
         if(!pressedKeys[87] && !pressedKeys[83] /*&& !pressedKeys[32]*/)
         {
-            if(this.acceleration < .05 && this.acceleration > -.05) { this.acceleration = 0 };
+            this.acceleration = 0;
+            /*if(this.acceleration < .05 && this.acceleration > -.05) { this.acceleration = 0 };
             
             if(this.acceleration > 0)
             {
@@ -160,7 +182,7 @@ class Car
             else if(this.acceleration < 0)
             {
                 this.acceleration += delta * .5;
-            }
+            }*/
         }
         
         this.vel_x += dx * this.acceleration * acceleration;// * this.speed;
@@ -198,16 +220,35 @@ class Car
             }
         }
         
-        this.vel_x = forward_vel_x + right_vel_x * this.drift;
-        this.vel_y = forward_vel_y + right_vel_y * this.drift;
+        let drift = (space_pressed_drift * this.drift + (standard_drift * (1 - this.drift)));
+        this.vel_x = forward_vel_x + right_vel_x * drift;
+        this.vel_y = forward_vel_y + right_vel_y * drift;
         
         let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
-        speedometer.innerHTML = vel_magnitude * 3.6 + " kmph";
+        let forward_magnitude = Math.sqrt(Math.abs(forward_vel_x * forward_vel_x + forward_vel_y * forward_vel_y));
+        
+        if(forward_magnitude > .1) 
+        {
+            this.car_angle -= this.wheel_angle * Math.min(Math.max(forward_magnitude, 0), 1);
+        }
+        
+        speedometer.innerHTML = Math.round(vel_magnitude * 3.6);
         
         this.position.x += this.vel_x * delta;
         this.position.z += this.vel_y * delta;
-        this.vel_x *= .995;
-        this.vel_y *= .995;
+        
+        if(acceleration > .1)
+        
+        if(forward_magnitude > this.speed)
+        {
+            this.vel_x *= .991;
+            this.vel_y *= .991;
+        }
+        else
+        {
+            this.vel_x *= .995;
+            this.vel_y *= .995;
+        }
     }
     
 }

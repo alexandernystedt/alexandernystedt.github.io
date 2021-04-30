@@ -1,2 +1,0 @@
-# alexandernystedt.github.io
-Webiste

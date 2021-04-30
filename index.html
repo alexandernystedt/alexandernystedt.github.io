@@ -4,14 +4,27 @@
 <head>
     <meta charset="UTF-8"/>
     
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet"> 
+    
     <link rel="stylesheet" type="text/css" href="style.css?version=51"/>
 </head>
 
 <body>
     <div id="main-canvas">
         <div class="gui">
-            <p id="speedometer">0 kmpph</p>
+            <div src="res/speedometer.png" id="speedometer-container">
+                <img src="res/speedometer.png"></img>
+                <p id="speedometer">0</p>
+            </div>
+            <p>drifting value</p>
+            <input id="drifting_value" type="range" min="0" max="100" value="60">
+            <p id="drifting_value_display">60%</p>
+            <p>space drifting value</p>
+            <input id="space_drifting_value" type="range" min="0" max="100" value="100">
+            <p id="space_drifting_value_display">100%</p>
         </div>
+        
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
