@@ -162,8 +162,8 @@ class Car
             }
         }
         
-        this.vel_x += dx * this.acceleration * delta * acceleration;// * this.speed;
-        this.vel_y += dy * this.acceleration * delta * acceleration;// * this.speed;
+        this.vel_x += dx * this.acceleration * acceleration;// * this.speed;
+        this.vel_y += dy * this.acceleration * acceleration;// * this.speed;
         
         dy = -Math.cos(this.car_angle);
         dx = -Math.sin(this.car_angle);
@@ -203,8 +203,8 @@ class Car
         let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
         speedometer.innerHTML = vel_magnitude * 3.6 + " kmph";
         
-        this.position.x += this.vel_x;
-        this.position.z += this.vel_y;
+        this.position.x += this.vel_x * delta;
+        this.position.z += this.vel_y * delta;
         this.vel_x *= .995;
         this.vel_y *= .995;
     }
