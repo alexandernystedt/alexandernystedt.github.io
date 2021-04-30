@@ -14,6 +14,7 @@ const degrees_to_radians = 0.0174532925;
 const acceleration = .5;
 const breaks = 10; 
 var speedometer = document.getElementById("speedometer");
+let camera_type = false;
 
 const Engine = 
 {
@@ -236,6 +237,7 @@ function game_update()
     
     update_car_mesh(car.position.x, car.position.y, car.position.z, car.car_angle);
     
+    if(pressedKeys[49]) camera_type = true;
     update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI, true);
     
     
