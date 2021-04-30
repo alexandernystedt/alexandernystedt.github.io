@@ -201,7 +201,7 @@ class Car
         this.vel_y = forward_vel_y + right_vel_y * this.drift;
         
         let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
-        speedomoter.innerHTML = vel_magnitude + " kmph";
+        speedometer.innerHTML = vel_magnitude + " kmph";
         
         this.position.x += this.vel_x;
         this.position.z += this.vel_y;
