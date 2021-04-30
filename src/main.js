@@ -197,8 +197,8 @@ class Car
             }
         }
         
-        this.vel_x = forward_vel_x + right_vel_x * this.drift;
-        this.vel_y = forward_vel_y + right_vel_y * this.drift;
+        this.vel_x = forward_vel_x + right_vel_x * 1;
+        this.vel_y = forward_vel_y + right_vel_y * 1;
         
         let vel_magnitude = Math.sqrt(Math.abs(this.vel_x * this.vel_x + this.vel_y * this.vel_y));
         speedometer.innerHTML = vel_magnitude * 3.6 + " kmph";
