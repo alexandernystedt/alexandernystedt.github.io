@@ -13,7 +13,7 @@ load_items();
 const degrees_to_radians = 0.0174532925;
 const acceleration = .5;
 const breaks = 10; 
-var speeometer = document.getElementById("speedometer");
+var speedometer = document.getElementById("speedometer");
 
 const Engine = 
 {
