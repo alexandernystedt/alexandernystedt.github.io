@@ -205,8 +205,8 @@ class Car
         
         this.position.x += this.vel_x;
         this.position.z += this.vel_y;
-        this.vel_x -= delta * breakspeed;
-        this.vel_y -= delta * breakspeed;
+        this.vel_x *= .995;
+        this.vel_y *= .995;
     }
     
 }
