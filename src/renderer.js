@@ -1,6 +1,7 @@
 //import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/OBJLoader.js';
+import { get_material } from '../shaders/default.js';
 
-let other_players = [];
+let other_players = {};
 
 var car_has_loaded = false;
 var car_obj = null;
@@ -62,17 +63,33 @@ function setup_renderer()
     scene.add(plane);
     
     objLoader.setPath('/res/');
-    objLoader.load('golf.obj', function (object) 
+    objLoader.load('911.obj', function (object) 
     {
     	car_has_loaded = true;
     
     	car_obj = object;
     
-    	var material = new THREE.MeshBasicMaterial
-    	({
-    		//color: 0xFF00FF,
-    		map: texture2,
-    	});
+    	var material = get_material(texture2);
+        
+    	object.traverse( function ( child ) {
+        
+            if ( child instanceof THREE.Mesh ) {
+            
+                child.material = material;
+            
+            }
+        
+        } );
+    
+    	object.position.y = 1;
+    
+        scene.add(object);
+    });
+    
+    objLoader.load('showcase.obj', function (object) 
+    {
+    	var material = get_material(texture2);
+        
     	object.traverse( function ( child ) {
         
             if ( child instanceof THREE.Mesh ) {
@@ -94,6 +111,15 @@ function render()
     renderer.render(scene, camera);
 }
 
+function set_camera(x, y, z, rot)
+{
+    camera.position.x = x;
+    camera.position.y = y;
+    camera.position.z = z;
+    
+    camera.rotation.x = rot;
+}
+
 function update_camera(x, y, z, rot, type)
 {
     if(type)
@@ -109,7 +135,10 @@ function update_camera(x, y, z, rot, type)
     else
     {
         camera.position.x = camera.position.x * .9 + (x) * .1;
+        camera.position.y = y;
         camera.position.z = camera.position.z * .9 + (z + 20) * .1;
+        
+        camera.rotation.x = -Math.PI / 4;
     }
 }
 
@@ -118,18 +147,32 @@ function update_car_mesh(x, y, z, rot)
     if(car_has_loaded)
 	{
         car_obj.position.x = x;
-        //car_obj.position.y = y;
+        car_obj.position.y = y;
 	    car_obj.position.z = z;
 	    car_obj.rotation.y = rot + (Math.PI);
     }
 }
 
-function update_player_pos(index, x, y, z, rot)
+function update_player_pos(id, x, y, z, rot)
 {
-    other_players[index].mesh.position.x = x;
-    //other_players[index].mesh.position.y = y;
-    other_players[index].mesh.position.z = z;
-    other_players[index].mesh.rotation.y = rot + Math.PI;
+    if(Object.keys(other_players).indexOf(id) === -1 )
+    {
+        /* New client */
+        other_players[id] = new THREE.Mesh
+        (
+            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.MeshBasicMaterial
+            ({
+                color: 0xFF0000
+            })
+        );
+        
+        scene.add(other_players[id]);
+    }
+    
+    other_players[id].position.x = other_players[id].position.x * .2 + x * .8;
+    other_players[id].position.y = 1;
+    other_players[id].position.z = other_players[id].position.z * .2 + z * .8;
 }
 
 function add_player_mesh()
@@ -165,4 +208,4 @@ function add_player_mesh()
     return other_players.length - 1;
 }
 
-export { setup_renderer, update_camera, update_car_mesh, render, add_player_mesh, update_player_pos };
+export { scene, setup_renderer, update_camera, update_car_mesh, render, add_player_mesh, update_player_pos, set_camera };

@@ -25,12 +25,32 @@
             <p id="space_drifting_value_display">100%</p>
         </div>
         
+        <div id="lobby">
+            <p id="current-game">Current game: none</p>
+            
+            
+        </div>
+        
+        <div id="play">
+            <button id="host" type="button">Host</button>
+            <button id="join" type="button">Join</button>
+            <!--<button id="leave" type="button">Leave</button>-->
+        </div>
+        
+        <div id="join-panel">
+            <input id="code" type="text" placeholder="Enter game code">
+            <button id="join-panel-close" type="button">X</button>
+            <button id="join-panel-accept">Accept</button>
+            <button id="join-panel-cancel">Cancel</button>
+        </div>
+        
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.min.js"></script>-->
+    <script src='./lib/three.js'></script>
     <script src="./lib/OBJLoader.js"></script>
     
-    <script src="./src/renderer.js"></script>
+    <script type="module" src="./src/renderer.js"></script>
     
     <script type="module" src="./src/main.js"></script>
     

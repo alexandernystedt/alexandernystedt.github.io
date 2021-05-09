@@ -49,3 +49,154 @@ canvas
     font-family: 'Roboto';
     font-size: 48px;
 }
+
+
+
+
+
+
+#lobby
+{
+    background-color: #0788D9;
+    
+    position: absolute;
+    
+    width: 240px;
+    height: 540px;
+    
+    border-radius: 12px;
+    
+    left: 32px; 
+    top: 32px;
+}
+
+
+
+
+#play
+{
+    display: flex;              /* establish flex container */
+    flex-direction: column;     /* stack flex items vertically */
+    justify-content: center;    /* center items vertically, in this case */
+    align-items: center;        /* center items horizontally, in this case */
+    
+    position: absolute;
+    bottom: 50%;
+    right: 32px;
+    
+    -moz-transform: translateY(50%);
+    -webkit-transform: translateY(50%);
+    transform: translateY(50%);
+}
+
+#play > button
+{
+    /* background-color: #74A651; */
+    
+    font-family: 'Roboto';
+    font-weight: bold;
+    
+    /* width: 100%; */
+    /* height: 24px; */
+    
+    border-radius: 1000px;
+    
+    margin: 8px 0px;
+    
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    
+    transition-duration: 0.4s;
+}
+
+#play > #host
+{
+    background-color: #7951a6;
+    border: 2px solid #7951a6;
+}
+
+#play > #join
+{
+    background-color: #4eb8c0;
+    border: 2px solid #4eb8c0;
+}
+
+#play > button:hover 
+{
+    border: 2px solid white;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+
+
+
+
+#join-panel
+{
+    background-color: #7951a6;
+    
+    width: 50%;
+    height: 50%;
+    
+    position: absolute;
+    bottom: 50%;
+    right: 50%;
+    
+    -moz-transform: translateX(50%) translateY(50%);
+    -webkit-transform: translateX(50%) translateY(50%);
+    transform: translateX(50%) translateY(50%);
+}
+
+#join-panel > input
+{
+    width: 240px;
+    height: 32px;
+    
+    position: absolute;
+    
+    bottom: 50%;
+    right: 50%;
+    
+    -moz-transform: translateX(50%) translateY(50%);
+    -webkit-transform: translateX(50%) translateY(50%);
+    transform: translateX(50%) translateY(50%);
+    
+    font-family: 'Roboto';
+}
+
+#join-panel > #join-panel-close
+{
+    background-color: #e0352f;
+    
+    font-family: 'Roboto';
+    font-weight: bold;
+    
+    /* width: 100%; */
+    /* height: 24px; */
+    
+    border-radius: 1000px;
+    
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+    width: 44px;
+    height: 44px;
+    
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    
+    -moz-transform: translateX(50%) translateY(-50%);
+    -webkit-transform: translateX(50%) translateY(-50%);
+    transform: translateX(50%) translateY(-50%);
+}
+

@@ -1,9 +1,12 @@
 import load_items from "./inventory.js";
-import check_lines from "./physics.js";
-import { connect_to_server, request_server_update } from "./client/client.js";
-import { setup_renderer, update_camera, update_car_mesh, render } from "./renderer.js";
+import { connect_to_server, request_server_update, host_game, join_game, leave_game, current_game } from "./client/client.js";
+import { scene, setup_renderer, update_camera, update_car_mesh, render, set_camera } from "./renderer.js";
+import ParticleSystem from "./particles.js";
+import { delta, update_delta } from "./delta.js";
 
 setup_renderer();
+
+let system = new ParticleSystem(scene, "res/smoke.png");
 
 //connect_to_server();
 
@@ -34,6 +37,56 @@ space_pressed_drift_slider.oninput = (() =>
     space_pressed_drift = space_pressed_drift_slider.value / 100;
     space_pressed_drift_slider_display.innerHTML = space_pressed_drift_slider.value + "%";
 });
+
+
+let join = document.getElementById("join");
+let host = document.getElementById("host");
+//let leave = document.getElementById("leave");
+let code = document.getElementById("code");
+
+var join_panel = document.getElementById("join-panel");
+join_panel.style.visibility = "hidden";
+var join_panel_close = document.getElementById("join-panel-close");
+var join_panel_accept = document.getElementById("join-panel-accept");
+var join_panel_cancel = document.getElementById("join-panel-cancel");
+
+let current_game_display = document.getElementById("current-game");
+
+join.addEventListener("click", () =>
+{
+    join_panel.style.visibility = "visible";
+}); 
+
+host.addEventListener("click", () =>
+{
+    host_game();
+}); 
+
+/*leave.addEventListener("click", () =>
+{
+    console.log("Leaving game...");
+    leave_game();
+}); */
+
+join_panel_close.addEventListener("click", () =>
+{
+    /* Disable the panel when the (x) button is pressed */
+    join_panel.style.visibility = "hidden";
+}); 
+
+join_panel_accept.addEventListener("click", () =>
+{
+    console.log("Joining game " + code.value + "...");
+    join_game(code.value);
+    /* TODO: Display something if the lobby doesnt exist */
+    join_panel.style.visibility = "hidden";
+}); 
+
+join_panel_cancel.addEventListener("click", () =>
+{
+    join_panel.style.visibility = "hidden";
+});
+
 
 const Engine = 
 {
@@ -265,44 +318,47 @@ window.onload = function()
     //window.requestAnimationFrame(game_update)
 }
 
-let delta = 0;
-
-let old_time = 0;
 function game_update()
 {
-    let time = performance.now();
-    delta = (time - old_time) * 0.001;
-    old_time = time;
-    /* Update here */
-    car.update();
-    
-    update_car_mesh(car.position.x, car.position.y, car.position.z, car.car_angle);
-    
-    if(pressedKeys[49]) camera_type = true;
-    update_camera(car.position.x, car.position.y, car.position.z, car.car_angle + Math.PI, camera_type);
-    
-    
+    if(current_game != null)
+    {
+        update_delta();
+        
+        /* Update here */
+        car.update();
+        
+        update_car_mesh(car.position.x, car.position.y + 1, car.position.z, car.car_angle);
+        
+        //if(pressedKeys[49]) camera_type = true;
+        update_camera(car.position.x, car.position.y + 18, car.position.z, car.car_angle + Math.PI, camera_type);
+        
+        
+        system.update_patricles(car.position);
+        
+    }
+    else
+    {
+        set_camera(0, 7.5, 10, -33.75 * degrees_to_radians);
+        update_car_mesh(0, 2, 0, Date.now() / 1000);
+    }
     /* Drawing here */
     render();
-    
-    //window.requestAnimationFrame(game_update);
 }
 
 function update_server()
 {
-    request_server_update(car.position.x, car.position.y, car.position.z, car.car_angle);
+    if(current_game != null)
+    {
+        current_game_display.innerHTML = "Current game: " + current_game;
+        request_server_update(car.position.x, car.position.y, car.position.z, car.car_angle);
+    }
+    else
+    {
+        current_game_display.innerHTML = "Current game: none";
+    }   
 }
 
 /* https://stackoverflow.com/questions/1828613/check-if-a-key-is-down */
 var pressedKeys = {};
 window.onkeyup = function(e) { pressedKeys[e.keyCode] = false; }
 window.onkeydown = function(e) { pressedKeys[e.keyCode] = true; }
-
-function main()
-{
-    console.log("hello");
-    
-    //load_game();
-}
-
-main();
