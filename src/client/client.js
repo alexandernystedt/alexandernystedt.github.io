@@ -47,7 +47,7 @@ function leave_game()
 function connect_to_server()
 {
     /* Connecting to the server */
-    ws = new WebSocket("wss://90.235.59.176:8080");
+    ws = new WebSocket("wss://192.168.8.100:8080");
     ws.onmessage = message => 
     {
         const response = JSON.parse(message.data);
