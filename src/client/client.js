@@ -47,7 +47,7 @@ function leave_game()
 function connect_to_server()
 {
     /* Connecting to the server */
-    ws = new WebSocket("ws://localhost:8080");
+    ws = new WebSocket("ws://90.235.59.176:8080");
     ws.onmessage = message => 
     {
         const response = JSON.parse(message.data);
@@ -69,7 +69,9 @@ function connect_to_server()
                 /* New client */
                 clients[response.client_id] = 
                 {
-                    position: response.position
+                    position: response.position,
+                    rot: response.rot,
+                    score: 0
                 }
                 
                 console.log(response.client_id + " has joined your lobby");
@@ -77,13 +79,14 @@ function connect_to_server()
             else
             {
                 clients[response.client_id].position = response.position;
+                clients[response.client_id].rot = response.rot;
             }
             
             /* Get the data and use it */
             let position = clients[response.client_id].position;
             //console.log(response.client_id + " : x: " + position.x + ", y:" + position.y + ", z:" + position.z);
             
-            update_player_pos(response.client_id, position.x, position.y, position.z, 0);
+            update_player_pos(response.client_id, position.x, position.y, position.z, clients[response.client_id].rot);
         }
         else if(response.method === "game_created")
         {
@@ -134,10 +137,19 @@ function request_server_update(x, y, z, rot)
             y: y,
             z: z
         },
-        //"rot": rot,
+        
+        rot: rot,
     }
     
     ws.send(JSON.stringify(pay_load));
+}
+
+function update_scoreboard()
+{
+    for(const player in clients)
+    {
+        //clients[player]
+    }
 }
 
 export { connect_to_server, request_server_update, host_game, join_game, leave_game, current_game };

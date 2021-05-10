@@ -1,40 +1,135 @@
 /* 2D physics top down */
 
-class Collider
+function dot(x, y, x1, y1)
 {
-    constructor()
+    return (x * x1 + y * y1);
+}
+
+function squared_length(x, y)
+{
+    return dot(x, y, x, y);
+}
+
+class OBB2D 
+{
+    constructor(center_x, center_y, width, height, angle)
     {
-        this.position = {};
-        this.position.x = 0;
-        this.position.y = 0;
+        this.angle = angle;
         
-        this.size = {};
-        this.size.x = 1;
-        this.size.y = 1;
+        this.corners = 
+        [ 
+            0, 0, 
+            0, 0, 
+            0, 0,  
+            0, 0 
+        ];
         
-        this.rotation = 0;
+        this.axis = 
+        [
+            0, 0,
+            0, 0
+        ];
+        
+        this.origin = [ 0, 0 ];
+        
+        let x1 = Math.cos(angle);
+        let x2 = Math.sin(angle);
+        let y1 = -x2;
+        let y2 = x1;
+    
+        width /= 2;
+        height /= 2;
+        x1 *= width;
+        x2 *= width;
+        y1 *= height;
+        y2 *= height;
+    
+        this.corners[0] = center_x - x1 - y1;
+        this.corners[1] = center_y - x2 - y2;
+        
+        this.corners[2] = center_x + x1 - y1;
+        this.corners[3] = center_y + x2 - y2;
+        
+        this.corners[4] = center_x + x1 + y1;
+        this.corners[5] = center_y + x2 + y2;
+        
+        this.corners[6] = center_x - x1 + y1;
+        this.corners[7] = center_y - x2 + y2;
+        
+        this.compute_axes();
     }
-}
-
-/* https://gamedev.stackexchange.com/questions/26004/how-to-detect-2d-line-on-line-collision */
-function check_lines(x0, y0, x1, y2, x3, y3, x4, y4)
-{
-    let denominator = ((x1 - x0) * (y4 - y3)) - ((y2 - y0) * (x4 - x3));
-    let numerator1 =  ((y0 - y3) * (x4 - x3)) - ((x0 - x3) * (y4 - y4));
-    let numerator2 =  ((y0 - y3) * (x1 - x0)) - ((x0 - x3) * (y2 - y0));
-
-    // Detect coincident lines (has a problem, read below)
-    if (denominator == 0) return numerator1 == 0 && numerator2 == 0;
     
-    let r = numerator1 / denominator;
-    let s = numerator2 / denominator;
-
-    return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
-}
-
-function check_collider(collider1, collider2)
-{
+    overlaps1way(other)
+    {
+        for(let a = 0; a < 2; a++)
+        {
+            let t = dot(other.corners[0], other.corners[1], this.axis[a * 2], this.axis[a * 2 + 1]);
+            
+            let tmin = t;
+            let tmax = t;
+            
+            for(let c = 1; c < 4; c++)
+            {
+                t = dot(other.corners[c * 2], other.corners[c * 2 + 1], this.axis[a * 2], this.axis[a * 2 + 1]);
+                
+                if(t < tmin)
+                {
+                    tmin = t;
+                }
+                else if(t > tmax)
+                {
+                    tmax = t;
+                }
+            }
+            
+            if((tmin > 1 + this.origin[a]) || (tmax < this.origin[a]))
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
     
-}
+    compute_axes()
+    {
+        this.axis[0] = this.corners[2] - this.corners[0];
+        this.axis[1] = this.corners[3] - this.corners[1];
+        this.axis[2] = this.corners[6] - this.corners[0];
+        this.axis[3] = this.corners[7] - this.corners[1];
+        
+        for(let a = 0; a < 2; a++)
+        {
+            let vec_len = squared_length(this.axis[a * 2 + 0], this.axis[a * 2 + 1]);
+            this.axis[a * 2 + 0] /= vec_len;
+            this.axis[a * 2 + 1] /= vec_len;
+            
+            this.origin[a] = dot(this.corners[0], this.corners[1], this.axis[a * 2], this.axis[a * 2 + 1]);
+            
+        }
+    }
+    
+    overlaps(other)
+    {
+        return this.overlaps1way(other) && other.overlaps1way(this);
+    }
+    
+    move_to(x, y)
+    {
+        let x1 = (this.corners[0] + this.corners[2] + this.corners[4] + this.corners[6]) / 4;
+        let y1 = (this.corners[1] + this.corners[3] + this.corners[5] + this.corners[7]) / 4;
+        
+        x -= x1;
+        y -= y1;
+        
+        for(let c = 0; c < 4; c++)
+        {
+            this.corners[c * 2] += x;
+            this.corners[c * 2 + 1] += y;
+        }
+        
+        this.compute_axes();
+    }
+    };
 
-export default check_lines;
+export { OBB2D };

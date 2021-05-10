@@ -70,6 +70,23 @@ canvas
     top: 32px;
 }
 
+#lobby > #players
+{
+    font-family: 'Roboto';
+    font-size: 16px;
+    
+    margin: 0px;
+    padding-left: 24px;
+    
+    list-style-type: inside;
+}
+
+#lobby > #players > li
+{
+    background-color: red;
+    margin: 4px 0px;
+}
+
 
 
 
@@ -200,3 +217,38 @@ canvas
     transform: translateX(50%) translateY(-50%);
 }
 
+
+
+
+#customize
+{
+    background-color: #7951a6;
+    border: 2px solid #7951a6;
+    
+    border-radius: 1000px;
+    
+    font-family: 'Roboto';
+    font-weight: bold;
+    
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    
+    position: absolute;
+    left: 50%;
+    bottom: 32px;
+    
+    -moz-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+#customize:hover 
+{
+    border: 2px solid white;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}

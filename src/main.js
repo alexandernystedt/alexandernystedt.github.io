@@ -4,6 +4,13 @@ import { scene, setup_renderer, update_camera, update_car_mesh, render, set_came
 import ParticleSystem from "./particles.js";
 import { delta, update_delta } from "./delta.js";
 
+import { OBB2D } from "./physics.js"
+
+let a = new OBB2D(0, 0, 1, 1, 0);
+let b = new OBB2D(1.1, 1.1, 1, 1, 0);
+
+console.log(a.overlaps(b));
+
 setup_renderer();
 
 let system = new ParticleSystem(scene, "res/smoke.png");
@@ -12,6 +19,8 @@ let system = new ParticleSystem(scene, "res/smoke.png");
 
 
 load_items();
+
+let is_customizing = false;
 
 const degrees_to_radians = 0.0174532925;
 const acceleration = .5;
@@ -52,6 +61,8 @@ var join_panel_cancel = document.getElementById("join-panel-cancel");
 
 let current_game_display = document.getElementById("current-game");
 
+let customize = document.getElementById("customize");
+
 join.addEventListener("click", () =>
 {
     join_panel.style.visibility = "visible";
@@ -87,6 +98,10 @@ join_panel_cancel.addEventListener("click", () =>
     join_panel.style.visibility = "hidden";
 });
 
+customize.addEventListener("click", () =>
+{
+    is_customizing = !is_customizing;
+});
 
 const Engine = 
 {
@@ -335,11 +350,24 @@ function game_update()
         
         system.update_patricles(car.position);
         
+        b.move_to(car.position.x, car.position.z);
+        if(b.overlaps(a))
+        {
+            car.position.x -= 1;
+        }
     }
     else
     {
-        set_camera(0, 7.5, 10, -33.75 * degrees_to_radians);
-        update_car_mesh(0, 2, 0, Date.now() / 1000);
+        if(is_customizing)
+        {
+            set_camera(0, 3, 5, -22.5 * degrees_to_radians);
+            update_car_mesh(0, 2, 0, Date.now() / 2000);
+        }
+        else
+        {
+            set_camera(0, 7.5, 10, -33.75 * degrees_to_radians);
+            update_car_mesh(0, 2, 0, Date.now() / 1000);
+        }
     }
     /* Drawing here */
     render();

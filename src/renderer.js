@@ -160,7 +160,7 @@ function update_player_pos(id, x, y, z, rot)
         /* New client */
         other_players[id] = new THREE.Mesh
         (
-            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.BoxGeometry(2, 1, 4.5),
             new THREE.MeshBasicMaterial
             ({
                 color: 0xFF0000
@@ -170,9 +170,10 @@ function update_player_pos(id, x, y, z, rot)
         scene.add(other_players[id]);
     }
     
-    other_players[id].position.x = other_players[id].position.x * .2 + x * .8;
+    other_players[id].position.x = x;
     other_players[id].position.y = 1;
-    other_players[id].position.z = other_players[id].position.z * .2 + z * .8;
+    other_players[id].position.z = z;
+    other_players[id].rotation.y = rot;
 }
 
 function add_player_mesh()
