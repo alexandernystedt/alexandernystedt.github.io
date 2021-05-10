@@ -18,12 +18,12 @@ const fragment =
 varying vec2 v_uv;
 varying vec3 v_normal;
 
-uniform vec3 color;
+uniform vec3 _color;
 uniform sampler2D color_texutre;
 
 void main()
 {
-    vec3 col = texture2D(color_texutre, v_uv).rgb * color;
+    vec3 col = texture2D(color_texutre, v_uv).rgb * _color;
     
     float ramp = dot(v_normal, vec3(0, .75, .25));
     ramp = step(0., ramp);
@@ -42,7 +42,7 @@ function get_material(_texture)
         {
             value: _texture
         },
-        color:
+        _color:
         {
             value: new THREE.Color(0x7F7F7F)
         }
