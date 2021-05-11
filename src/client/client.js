@@ -47,7 +47,7 @@ function leave_game()
 function connect_to_server()
 {
     /* Connecting to the server */
-    ws = new WebSocket("wss://mental-yoda2-game-server.zeet.app/");
+    ws = new WebSocket("https://mental-yoda2-game-server.zeet.app");
     ws.onmessage = message => 
     {
         const response = JSON.parse(message.data);
